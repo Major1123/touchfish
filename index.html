@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d7c86" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="TouchFish" />
+    <title>TouchFish.xls</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Q2 Productivity Surface</p>
+          <h1>TouchFish.xls</h1>
+        </div>
+        <div class="topbar-actions">
+          <button id="share-button" class="ghost-button" type="button">分享链接</button>
+          <button id="boss-key" class="ghost-button" type="button">老板键 B</button>
+          <button id="start-button" class="primary-button" type="button">开始摸鱼</button>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="summary-panel">
+          <div class="metric-card">
+            <span>摸鱼值</span>
+            <strong id="score-display">0</strong>
+          </div>
+          <div class="metric-card">
+            <span>连击</span>
+            <strong id="combo-display">x1</strong>
+          </div>
+          <div class="metric-card">
+            <span>剩余时间</span>
+            <strong id="time-display">60.0s</strong>
+          </div>
+          <div class="metric-card alert">
+            <span>老板警觉</span>
+            <strong id="alert-display">0%</strong>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <div class="game-frame">
+            <canvas id="game-canvas" width="960" height="540" aria-label="摸鱼游戏画布"></canvas>
+
+            <div id="start-overlay" class="overlay visible">
+              <div class="overlay-card">
+                <p class="eyebrow">Workstream Simulation</p>
+                <h2>工位摸鱼生存战</h2>
+                <p>
+                  电脑用方向键或 WASD，手机直接在画面里按住拖动。
+                  收集气泡，躲开会议红线和催办弹窗，按 <strong>B</strong> 或下方按钮秒切工作界面。
+                </p>
+                <div class="overlay-actions">
+                  <button id="overlay-start" class="primary-button" type="button">进入工位</button>
+                  <button id="install-button" class="ghost-button hidden" type="button">安装到手机</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="game-over-overlay" class="overlay">
+              <div class="overlay-card compact">
+                <p class="eyebrow">Session Closed</p>
+                <h2 id="game-over-title">老板来了</h2>
+                <p id="game-over-copy">这轮摸鱼结束，准备再开一局。</p>
+                <div class="overlay-actions">
+                  <button id="restart-button" class="primary-button" type="button">再摸一局</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="disguise-overlay" class="disguise-overlay">
+              <div class="disguise-header">
+                <div>
+                  <p class="eyebrow">Weekly Utilization Sheet</p>
+                  <h2>运营日报整理中</h2>
+                </div>
+                <span class="disguise-badge">已隐藏游戏</span>
+              </div>
+              <div class="fake-grid">
+                <div class="fake-grid-head">
+                  <span>队列</span>
+                  <span>负责人</span>
+                  <span>完成率</span>
+                  <span>风险</span>
+                </div>
+                <div id="fake-rows" class="fake-grid-body"></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="side-panel">
+            <div class="panel-card">
+              <p class="eyebrow">Controls</p>
+              <h3>怎么摸</h3>
+              <ul>
+                <li>手机按住画面拖动，小鱼会朝手指方向游</li>
+                <li>电脑继续支持 WASD / 方向键移动</li>
+                <li>收集蓝色气泡叠连击</li>
+                <li>躲开红色扫描线和催办框</li>
+                <li>B 键或“摸鱼伪装”按钮瞬间切工作模式</li>
+              </ul>
+            </div>
+
+            <div class="panel-card">
+              <p class="eyebrow">Phone Friendly</p>
+              <h3>手机也能玩</h3>
+              <ul>
+                <li>支持加到主屏幕，像小应用一样打开</li>
+                <li>部署后可以直接把网页链接转发给朋友</li>
+                <li>带原生分享按钮，手机上一键转发</li>
+              </ul>
+            </div>
+
+            <div class="panel-card">
+              <p class="eyebrow">Power Ups</p>
+              <h3>救命道具</h3>
+              <ul>
+                <li>咖啡：短时间加速</li>
+                <li>盾牌：挡下一次碰撞</li>
+                <li>每次收集都会轻微压低警觉值</li>
+              </ul>
+            </div>
+
+            <div class="panel-card">
+              <p class="eyebrow">Fake Analytics</p>
+              <h3>本周输出</h3>
+              <div class="bar-group">
+                <label>日报完成度</label>
+                <div class="bar-track"><span id="report-bar"></span></div>
+              </div>
+              <div class="bar-group">
+                <label>线程吞吐量</label>
+                <div class="bar-track warm"><span id="throughput-bar"></span></div>
+              </div>
+              <div class="bar-group">
+                <label>工位稳定性</label>
+                <div class="bar-track cool"><span id="stability-bar"></span></div>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="mobile-dock" aria-label="移动端快捷操作">
+          <button id="mobile-start" class="primary-button" type="button">开摸</button>
+          <button id="mobile-disguise" class="ghost-button" type="button">摸鱼伪装</button>
+          <button id="mobile-share" class="ghost-button" type="button">转发</button>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
